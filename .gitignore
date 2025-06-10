@@ -1,0 +1,5 @@
+venv/
+.env
+results/
+#contract_analyzer/gemma3-1b-contract-analyzer
+legal_assistant/requirements.txt

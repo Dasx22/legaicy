@@ -1,0 +1,109 @@
+accelerate
+bitsandbytes
+chromadb
+datasets
+dotenv
+faiss-cpu
+fastapi
+fitz
+google-generativeai
+langchain
+langchain-community
+langchain-core
+langchain-openai
+langchain-text-splitters
+langchain-chroma
+numpy
+openai
+pandas
+peft
+pypdf
+pymupdf
+python-dotenv
+requests
+sentence-transformers
+solidity_parser
+spacy
+streamlit
+streamlit-chat
+tf-keras
+torch
+transformers
+trl
+uvicorn
+requests
+numpy
+pandas
+google-generativeai
+pymupdf
+fastapi
+uvicorn
+openai
+python-dotenv
+dotenv
+spacy
+fitz
+solidity_parser
+sentencepiece
+requests
+numpy
+pandas
+google-generativeai
+pymupdf
+fastapi
+uvicorn
+openai
+python-dotenv
+dotenv
+spacy
+fitz
+solidity_parser
+transformers
+datasets
+accelerate
+peft
+bitsandbytes
+trl
+torch
+PyMuPDF
+tf-keras
+streamlit
+langchain
+chromadb
+sentence-transformers
+uvicorn
+streamlit
+langchain
+langchain-community
+langchain-openai
+pypdf
+python-dotenv
+# streamlit
+# langchain
+# langchain-community
+# langchain-huggingface
+# chromadb
+# sentence-transformers
+# pypdf
+# python-dotenv
+# torch
+# transformers
+# accelerate
+# bitsandbytes
+fastapi
+uvicorn[standard]
+python-dotenv
+torch
+transformers
+bitsandbytes
+accelerate
+langchain
+langchain-community
+langchain-core
+langchain-text-splitters
+langchain-chroma
+sentence-transformers
+pypdf
+streamlit
+requests
+
