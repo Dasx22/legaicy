@@ -35,7 +35,7 @@ logger = logging.getLogger(__name__)
 
 # --- Configuration ---
 MODEL_ID = "google/gemma-3-1b-it"
-DATASET_DIR = "./preprocessed_jsonl"  # Directory containing your .jsonl files
+DATASET_DIR = "./preprocessed_jsonl"  # Directory containing .jsonl files (preprocessed files)
 OUTPUT_DIR = "./results"
 NEW_MODEL_NAME = "gemma3-1b-contract-analyzer"
 
@@ -95,18 +95,17 @@ def setup_model_and_tokenizer():
 
     # Load the tokenizer
     tokenizer = AutoTokenizer.from_pretrained(MODEL_ID, trust_remote_code=True)
-    # Gemma's pad token is not set by default, so we set it to the EOS token
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
         logger.info("Set tokenizer's pad_token to its eos_token.")
 
-    # Load the model with quantization and the recommended attention implementation
+    # Load the model with quantization
     model = AutoModelForCausalLM.from_pretrained(
         MODEL_ID,
         quantization_config=bnb_config,
         device_map="auto",
         torch_dtype=torch.bfloat16,
-        attn_implementation='eager',  # Recommended for Gemma models
+        attn_implementation='eager', 
     )
 
     return model, tokenizer
@@ -135,7 +134,7 @@ def train():
     dataset = load_dataset("json", data_files=jsonl_files, split="train")
     logger.info(f"Loaded {len(dataset)} samples from {len(jsonl_files)} file(s).")
     
-    # Log a sample after formatting
+    
     logger.info(f"Sample formatted text:\n{format_dataset(dataset[0])[:350]}...")
 
     # 3. Configure PEFT (LoRA)
@@ -158,7 +157,7 @@ def train():
         gradient_accumulation_steps=GRAD_ACCUM_STEPS,
         num_train_epochs=NUM_EPOCHS,
         learning_rate=LEARNING_RATE,
-        fp16=True, # Use mixed precision training
+        fp16=True, 
         logging_steps=10,
         save_steps=100,
         save_strategy="steps",
@@ -167,11 +166,11 @@ def train():
         warmup_steps=10,
         gradient_checkpointing=True,
         save_total_limit=2,
-        report_to="none", # Set to "wandb" or "tensorboard" for experiment tracking
+        report_to="none", 
         push_to_hub=False,
     )
 
-    # 5. Initialize SFTTrainer
+   
     # SFTTrainer is ideal for this task as it simplifies the process of
     # supervised fine-tuning on formatted prompt-response pairs.
     logger.info("Initializing SFTTrainer...")
@@ -181,9 +180,7 @@ def train():
         train_dataset=dataset,
         peft_config=peft_config,
         processing_class=tokenizer,
-        formatting_func=format_dataset, # Use our custom formatting function
-        ##max_seq_length=MAX_SEQ_LENGTH,
-        #packing=False, # Set to True if you have many short samples to pack together
+        formatting_func=format_dataset, 
     )
 
     # 6. Start Training
@@ -204,8 +201,6 @@ def test_model():
 
     # Load the fine-tuned model and tokenizer
     tokenizer = AutoTokenizer.from_pretrained(NEW_MODEL_NAME)
-    # When loading for inference, you often load it directly without quantization config
-    # The adapter will be applied on top of the base model
     model = AutoModelForCausalLM.from_pretrained(
         NEW_MODEL_NAME,
         torch_dtype=torch.float16,
@@ -227,8 +222,7 @@ function transfer(address to, uint256 amount) public {
         "summary, and key_terms_operations."
     )
 
-    # IMPORTANT: The prompt for inference should only contain the user part.
-    # The model will generate the content for the 'model' turn.
+    
     test_prompt = f"""<start_of_turn>user
 {instruction}
 
@@ -263,5 +257,4 @@ Analyze this Solidity code:
 
 if __name__ == "__main__":
     train()
-    # Uncomment the line below to automatically test the model after training is complete
-    # test_model()
+    
