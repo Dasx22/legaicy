@@ -8,10 +8,10 @@ We empower users by demystifying complex legal documents and procedures.
 Our system meticulously scans smart legal contracts to pinpoint potential loopholes and security risks, helping you prevent costly errors and disputes.
 
 ### 🤖 Intelligent LegalBOT
-Have a legal question? Get instant answers from our AI-powered LegalBOT. It understands the nuances of your query and provides responses based on the legal framework of your country, making the advice relevant and actionable.
+Have a legal question? Get instant answers from our AI-powered LegalBOT. It understands the nuances of your query and provides responses based on the legal framework of your country, making the advice relevant and actionable. Currently available for India, USA and Germany.
 
 ### 🚀 Powered by Cutting-Edge AI
-Our services are built on a foundation of a fine-tuned Gemma model and a sophisticated multi-agent RAG architecture with FAISS, ensuring high accuracy and contextual understanding.
+Our services are built on a foundation of a self fine-tuned Gemma3 model and a sophisticated multi-agent RAG architecture with FAISS, ensuring high accuracy and contextual understanding.
 
 ---
 
@@ -45,10 +45,11 @@ Our services are built on a foundation of a fine-tuned Gemma model and a sophist
    - ```bash
      pip install -r requirements.txt
      ```
-#### 6. Navigate to the backend folder:
+#### 6. Ensure CUDA toolkit is installed:
    - ```bash
-     cd backend
+     pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118 
      ```
+
 #### 7. Start the FastAPI server:
    - ```bash
      uvicorn server:app --reload
@@ -66,4 +67,12 @@ Our services are built on a foundation of a fine-tuned Gemma model and a sophist
    - ```bash
      npm run dev
      ```
+## ⚙️ System Requirements
+- CPU: 4-core Processor (Intel Core i5, AMD Ryzen 5 or equivalent)
+- RAM: 16 GB
+- GPU: NVIDIA GPU with CUDA support and at least 6 GB of VRAM (e.g., NVIDIA GeForce RTX 4050, GTX 1660 Ti).
+- Storage: 10 GB of free space (SSD recommended for faster model loading).
+- Software:
+- NVIDIA Drivers and CUDA Toolkit 11.8 (as specified in installation).
+- Git, Conda, and Node.js (v18 or higher).
 
