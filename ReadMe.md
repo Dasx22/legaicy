@@ -1,4 +1,4 @@
-![Legaicy Banner](./banner.jpg)
+![Legaicy Banner](./banner.png)
 
 # 👩‍⚖️ Legaicy
 
