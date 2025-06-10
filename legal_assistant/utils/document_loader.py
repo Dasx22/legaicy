@@ -1,8 +1,5 @@
-# utils/document_loader.py
 from langchain_community.document_loaders import PyMuPDFLoader, TextLoader
-# Deprecation Fix: TextSplitter moved to its own package
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-# Deprecation Fix: Core schema like Document moved to langchain_core
 from langchain_core.documents import Document
 import os
 import glob
@@ -12,7 +9,7 @@ class DocumentLoader:
     def __init__(self, country: str):
         self.country = country
         self.docs_path = f"./data/legal_docs/{country}/"
-        # The initialization of RecursiveCharacterTextSplitter is up-to-date
+        #Split document into chunks
         self.text_splitter = RecursiveCharacterTextSplitter(
             chunk_size=800,
             chunk_overlap=100,
@@ -29,7 +26,6 @@ class DocumentLoader:
         text = re.sub(r'[^\x00-\x7F]+', ' ', text)
         # Replace multiple spaces with a single space
         text = re.sub(r'\s+', ' ', text).strip()
-        # You could add more rules here, e.g., for removing headers/footers
         return text
 
     def load_documents(self):
@@ -40,17 +36,15 @@ class DocumentLoader:
             os.makedirs(self.docs_path, exist_ok=True)
             self._create_sample_documents()
         
-        # --- Improved PDF Processing ---
+        
         pdf_files = glob.glob(os.path.join(self.docs_path, "*.pdf"))
         for pdf_file in pdf_files:
             try:
-                # Use PyMuPDFLoader for better and faster extraction
                 loader = PyMuPDFLoader(pdf_file)
                 docs = loader.load()
                 
-                # Clean the content of each page before adding it
                 for doc in docs:
-                    doc.page_content = self._clean_text(doc.page_content)
+                    doc.page_content = self._clean_text(doc.page_content) #Built in text formatting function
                 
                 documents.extend(docs)
                 print(f"Loaded and Cleaned PDF: {pdf_file}")
@@ -68,8 +62,7 @@ class DocumentLoader:
             except Exception as e:
                 print(f"Error loading TXT {txt_file}: {e}")
         
-        # Split documents into chunks
-        # The .split_documents() method remains the correct usage
+       
         if documents:
             split_docs = self.text_splitter.split_documents(documents)
             print(f"Split {len(documents)} source pages into {len(split_docs)} chunks.")

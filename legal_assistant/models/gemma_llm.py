@@ -1,4 +1,3 @@
-# models/gemma_llm.py
 from langchain.llms.base import LLM
 from transformers import AutoTokenizer, AutoModelForCausalLM
 import torch
@@ -48,7 +47,7 @@ class GemmaLLM(LLM):
                     trust_remote_code=True
                 )
             else:
-                # CPU inference
+                # CPU inference (fallback to CPU in case GPU fails)
                 self.model = AutoModelForCausalLM.from_pretrained(
                     self.model_name,
                     torch_dtype=torch.float32,
@@ -65,8 +64,6 @@ class GemmaLLM(LLM):
     def _call(self, prompt: str, stop: Optional[List[str]] = None) -> str:
         """Generate response from Gemma model"""
         try:
-            # --- MODIFICATION FOR CONCISENESS ---
-            # Add an explicit instruction to be concise in the prompt.
             instruction = "Provide a concise and direct answer to the following prompt."
             formatted_prompt = f"<bos><start_of_turn>user\n{instruction}\n\nPROMPT: {prompt}<end_of_turn>\n<start_of_turn>model\n"
 
@@ -75,10 +72,10 @@ class GemmaLLM(LLM):
                 formatted_prompt,
                 return_tensors="pt",
                 truncation=True,
-                max_length=self.max_length - 256  # Leave room for a concise response
+                max_length=self.max_length - 256  
             )
 
-            # Move to appropriate device
+            
             device = next(self.model.parameters()).device
             inputs = {k: v.to(device) for k, v in inputs.items()}
 
@@ -86,9 +83,7 @@ class GemmaLLM(LLM):
             with torch.no_grad():
                 outputs = self.model.generate(
                     **inputs,
-                    # --- MODIFICATION FOR CONCISENESS ---
-                    # Reduce max_new_tokens to limit output length.
-                    max_new_tokens=256,
+                    max_new_tokens=512,
                     temperature=self.temperature,
                     top_p=self.top_p,
                     do_sample=self.do_sample,

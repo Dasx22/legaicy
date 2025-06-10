@@ -1,23 +1,15 @@
-# agents/country_agents.py
-# Deprecation Fix: Tool is not used.
-# from langchain.tools import Tool
-# Deprecation Fix: Memory and prompts have moved to core. Chains has its own package.
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnablePassthrough, RunnableParallel
 from langchain_core.output_parsers import StrOutputParser
 from langchain.memory import ConversationBufferWindowMemory
-# Deprecation Fix: RetrievalQA is a legacy chain. We will build the equivalent with LCEL.
-# from langchain.chains import RetrievalQA
 import logging
 
 class CountryLegalAgent:
     def __init__(self, country: str, vector_store, llm):
         self.country = country
-        # Note: vector_store is the ChromaVectorStore object, not the retriever itself
         self.vector_store = vector_store
         self.llm = llm
         
-        # Initialize memory (Note: This is initialized but not used in the get_response logic)
         self.memory = ConversationBufferWindowMemory(
             memory_key="chat_history",
             k=3,
@@ -95,7 +87,7 @@ Response:"""
             # The input to the chain is a dictionary with the 'question' key
             response = self.retrieval_chain.invoke({"question": query})
             
-            # The formatting and disclaimer logic can be part of the main chain or done here
+        
             response = self._format_response(response)
             
             return response

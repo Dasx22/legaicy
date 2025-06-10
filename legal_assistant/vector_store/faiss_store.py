@@ -1,4 +1,3 @@
-# vectorstore/faiss_store.py
 import os
 import logging
 from langchain_community.embeddings import HuggingFaceEmbeddings
@@ -17,7 +16,7 @@ class FAISSVectorStore:
         # FAISS stores its index in a directory
         self.index_path = f"./faiss_db/{country}"
         
-        # Initialize embeddings - this part is up-to-date
+        # Initialize embeddings
         self.embeddings = HuggingFaceEmbeddings(
             model_name="sentence-transformers/all-MiniLM-L6-v2",
             model_kwargs={'device': 'cpu'},
@@ -34,7 +33,7 @@ class FAISSVectorStore:
         if os.path.exists(os.path.join(self.index_path, "index.faiss")):
             logger.info(f"Loading existing FAISS index for {self.country} from {self.index_path}")
             try:
-                # FAISS requires this flag for loading from local pickle files
+                
                 return FAISS.load_local(
                     self.index_path, 
                     self.embeddings,
@@ -59,14 +58,13 @@ class FAISSVectorStore:
         if not documents:
             logger.warning(f"No documents found for {self.country}. Creating an empty FAISS index.")
             # FAISS cannot be empty, so we create it with a dummy document.
-            # This ensures the agent has a valid retriever, even if it contains no real data.
             dummy_doc = [Document(page_content="This is a placeholder document to initialize the empty legal database.")]
             vectorstore = FAISS.from_documents(dummy_doc, self.embeddings)
         else:
             logger.info(f"Creating FAISS index with {len(documents)} document chunks for {self.country}")
             vectorstore = FAISS.from_documents(documents, self.embeddings)
         
-        # Save the newly created index to disk for future use
+        # Save the newly created index
         vectorstore.save_local(self.index_path)
         logger.info(f"Successfully saved new FAISS index for {self.country} to {self.index_path}")
         return vectorstore
@@ -78,8 +76,6 @@ class FAISSVectorStore:
             return
         
         logger.info(f"Adding {len(documents)} new documents to the FAISS index for {self.country}.")
-        # FAISS add_documents can be slow for large additions. For bulk updates, recreating the index is often faster.
-        # For smaller, incremental updates, this is fine.
         self.vectorstore.add_documents(documents)
         # Re-save the updated index to disk
         self.vectorstore.save_local(self.index_path)
