@@ -1,3 +1,5 @@
+![Legaicy Banner](./banner.jpg)
+
 # 👩‍⚖️ Legaicy
 
 ## Your AI-Powered Legal Co-Pilot
